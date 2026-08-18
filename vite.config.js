@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+// STREAMING_CHUNK: Konfigurasi standar Vite untuk React
 export default defineConfig({
   plugins: [react()],
 })
