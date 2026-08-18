@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Plus, List, Wallet, Target, TrendingUp, 
   FileText, PieChart, Cpu, BookOpen, RefreshCw, Maximize, 
-  Moon, Sun, Bell, ChevronDown, CheckCircle2, AlertCircle, Eye
+  Moon, Sun, AlertCircle, Eye, CheckCircle
 } from 'lucide-react';
 
-// --- MOCK DATA ---
 const KPI_DATA = {
   totalSaldo: "Rp 25.785.000",
   pemasukan: "Rp 0",
   pengeluaran: "Rp 940.000",
   rasioTabungan: "0.0%",
   nilaiKekayaan: "Rp 25.785.000",
-  statusKeuangan: 20 // 0-100 scale
+  statusKeuangan: 20
 };
 
 const UPCOMING_BILLS = [
@@ -32,14 +31,11 @@ const ACCOUNT_BALANCES = [
 ];
 
 const EXPENSE_DETAILS = [
-  { label: 'Belanja', value: 50, color: '#3b82f6' }, // Blue
-  { label: 'Lainnya', value: 20, color: '#ef4444' }, // Red
-  { label: 'Makan & Minum', value: 30, color: '#10b981' }, // Green
+  { label: 'Belanja', value: 50, color: '#3b82f6' },
+  { label: 'Lainnya', value: 20, color: '#ef4444' },
+  { label: 'Makan & Minum', value: 30, color: '#10b981' },
 ];
 
-// --- REUSABLE COMPONENTS ---
-
-// 1. Custom SVG Donut Chart for performance and zero-dependency
 const CustomDonutChart = ({ data, size = 120, strokeWidth = 15, innerText = "" }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -78,7 +74,6 @@ const CustomDonutChart = ({ data, size = 120, strokeWidth = 15, innerText = "" }
   );
 };
 
-// 2. Custom SVG Line Chart
 const CustomLineChart = ({ type = 'arusKas' }) => {
   const incomePath = type === 'arusKas' 
     ? "M 0,60 L 20,60 L 40,60 L 60,60 L 80,10 L 100,60 L 120,60 L 140,60 L 160,60 L 180,60 L 200,60 L 220,60 L 240,60 L 260,60 L 280,60"
@@ -117,7 +112,6 @@ const CustomLineChart = ({ type = 'arusKas' }) => {
   );
 };
 
-// 3. Card Wrapper
 const Card = ({ title, children, action, className = "" }) => (
   <div className={`bg-[#1c2438] rounded-xl border border-slate-700/50 p-5 flex flex-col ${className}`}>
     <div className="flex justify-between items-center mb-4">
@@ -130,9 +124,7 @@ const Card = ({ title, children, action, className = "" }) => (
   </div>
 );
 
-// --- AUTH PAGES ---
 const AuthPage = ({ type, onLogin, onNavigate }) => {
-  // Menambahkan default value (super admin) untuk memudahkan testing
   const [email, setEmail] = useState('admin@financeflow.pro');
   const [password, setPassword] = useState('superadmin');
   const [fullName, setFullName] = useState('');
@@ -144,17 +136,14 @@ const AuthPage = ({ type, onLogin, onNavigate }) => {
     setError('');
     setLoading(true);
     
-    // Simulasi loading API
     setTimeout(() => {
       setLoading(false);
       
-      // Logika khusus untuk Super Admin Login
       if (type === 'login' && email === 'admin@financeflow.pro' && password === 'superadmin') {
          onLogin({ name: "Super Admin", email: "admin@financeflow.pro", role: "admin" });
          return;
       }
 
-      // Logika validasi standar
       if (email && password) {
          if(type === 'register' && !fullName) {
             setError('Nama lengkap wajib diisi');
@@ -168,10 +157,9 @@ const AuthPage = ({ type, onLogin, onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b101a] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#0b101a] flex items-center justify-center p-4 w-full">
       <div className="w-full max-w-md bg-[#1c2438] rounded-2xl shadow-2xl border border-slate-700/50 p-8 relative overflow-hidden">
         
-        {/* Dekorasi Aksent */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
 
         <div className="text-center mb-8 mt-2">
@@ -190,10 +178,9 @@ const AuthPage = ({ type, onLogin, onNavigate }) => {
           </div>
         )}
 
-        {/* Info Super Admin (Khusus mode pengembangan) */}
         {type === 'login' && (
            <div className="mb-6 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg text-blue-400 text-xs flex flex-col gap-1 items-center justify-center text-center">
-             <span className="font-semibold flex items-center gap-1"><CheckCircle2 size={12}/> Mode Pengujian Aktif</span>
+             <span className="font-semibold flex items-center gap-1"><CheckCircle size={12}/> Mode Pengujian Aktif</span>
              <span className="text-slate-400">Gunakan kredensial bawaan di bawah untuk langsung masuk.</span>
            </div>
         )}
@@ -256,9 +243,7 @@ const AuthPage = ({ type, onLogin, onNavigate }) => {
   );
 };
 
-// --- MAIN APPLICATION ---
-
-export default function App() {
+const App = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [authStatus, setAuthStatus] = useState({ isAuthenticated: false, user: null, currentView: 'login' });
@@ -297,11 +282,10 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen ${bgTheme} ${textTheme} font-sans flex overflow-hidden transition-colors duration-300`}>
+    <div className={`min-h-screen ${bgTheme} ${textTheme} font-sans flex overflow-hidden w-full transition-colors duration-300`}>
       
-      {/* --- SIDEBAR --- */}
+      {/* Sidebar */}
       <aside className={`${sidebarBg} w-64 border-r border-slate-800/60 flex flex-col hidden md:flex transition-all duration-300 z-20`}>
-        {/* Logo Area */}
         <div className="h-20 flex items-center px-6 border-b border-slate-800/60">
           <h1 className="text-xl font-bold text-white tracking-wide flex items-center gap-2">
             FinanceFlow
@@ -310,7 +294,6 @@ export default function App() {
         </div>
         <div className="px-6 py-2 text-[10px] text-slate-500 font-semibold tracking-wider">ULTIMATE OS V1.5</div>
 
-        {/* Navigation */}
         <div className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
           <div>
             <p className="px-3 text-xs font-semibold text-slate-500 mb-2 uppercase tracking-wider">Menu Utama</p>
@@ -365,10 +348,9 @@ export default function App() {
         </div>
       </aside>
 
-      {/* --- MAIN CONTENT --- */}
+      {/* Main Content */}
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         
-        {/* Header */}
         <header className="h-20 px-8 flex justify-between items-center border-b border-slate-800/40 shrink-0">
           <div>
             <h2 className="text-2xl font-bold text-white tracking-tight">Selamat Pagi, {authStatus.user?.name || 'Boss'}!</h2>
@@ -398,10 +380,9 @@ export default function App() {
           </div>
         </header>
 
-        {/* Dashboard Content Scrollable Area */}
+        {}
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 space-y-6">
           
-          {/* Row 1: Top KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <div className="bg-[#1c2438] p-4 rounded-xl border border-slate-700/50">
               <p className="text-xs text-slate-400 font-medium mb-1 flex items-center gap-1">TOTAL SALDO <AlertCircle size={12}/></p>
@@ -437,10 +418,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* Row 2: Middle Section */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             
-            {/* Arus Kas Chart */}
             <Card title="Arus Kas (Bulan Ini)" className="lg:col-span-5 h-64">
               <div className="flex gap-4 mb-2 justify-center text-xs text-slate-400">
                 <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500 border border-slate-700"></span> Income</span>
@@ -462,7 +441,6 @@ export default function App() {
               </div>
             </Card>
 
-            {/* Rincian Pengeluaran */}
             <Card title="Rincian Pengeluaran" action="Lihat semua" className="lg:col-span-3 h-64">
               <div className="flex h-full items-center justify-center gap-4">
                 <CustomDonutChart data={EXPENSE_DETAILS} size={110} strokeWidth={18} />
@@ -477,7 +455,6 @@ export default function App() {
               </div>
             </Card>
 
-            {/* Tagihan Mendatang */}
             <Card title="Tagihan Mendatang" action="Lihat semua" className="lg:col-span-2 h-64">
               <div className="space-y-5 mt-2">
                 {UPCOMING_BILLS.map(bill => (
@@ -495,7 +472,6 @@ export default function App() {
               </div>
             </Card>
 
-            {/* Progres Target */}
             <Card title="Progres Target" action="Lihat semua" className="lg:col-span-2 h-64">
               <div className="mt-2">
                 <div className="flex justify-between items-center mb-2">
@@ -513,10 +489,8 @@ export default function App() {
 
           </div>
 
-          {/* Row 3: Bottom Section */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 pb-10">
             
-            {/* AI Insight */}
             <Card title={<span className="flex items-center gap-2 text-yellow-500"><Cpu size={16}/> AI Insight</span>} className="lg:col-span-3">
               <div className="space-y-4 text-sm mt-2">
                 <div className="flex items-start gap-2">
@@ -530,7 +504,6 @@ export default function App() {
               </div>
             </Card>
 
-            {/* Tren Bulanan */}
             <Card title="Tren Bulanan" className="lg:col-span-5 relative">
                <div className="flex gap-4 mb-2 justify-center text-xs text-slate-400 absolute top-5 right-5">
                 <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500"></span> Income</span>
@@ -555,7 +528,6 @@ export default function App() {
               </div>
             </Card>
 
-            {/* Transaksi Terakhir */}
             <Card title="Transaksi Terakhir" action="Lihat semua" className="lg:col-span-2">
               <div className="space-y-4 mt-2">
                 {RECENT_TRANSACTIONS.map(tx => (
@@ -570,7 +542,6 @@ export default function App() {
               </div>
             </Card>
 
-            {/* Saldo Akun */}
             <Card title="Saldo Akun" action={<Eye size={16} className="text-slate-400 hover:text-white" />} className="lg:col-span-2">
               <div className="space-y-4 mt-2">
                 {ACCOUNT_BALANCES.map(acc => (
@@ -593,4 +564,6 @@ export default function App() {
 
     </div>
   );
-}
+};
+
+export default App;
