@@ -1,4 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
+
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  )
+}
+
 import { 
   LayoutDashboard, Plus, List, Wallet, Target, TrendingUp, 
   FileText, PieChart, Cpu, BookOpen, RefreshCw, Maximize, 
