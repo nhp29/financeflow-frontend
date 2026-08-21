@@ -244,6 +244,51 @@ const AuthPage = ({ type, onLogin, onNavigate }) => {
 };
 
 const App = () => {
+// State untuk menyimpan data dari API
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fungsi Fetch API
+  useEffect(() => {
+    // Fungsi ini akan dijalankan sekali saat komponen dimuat
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Ambil token saat user login
+
+        // Ganti URL ini dengan URL Render Anda!
+        const response = await fetch('https://financeflow-backend-ohq4.onrender.com/api/dashboard', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Kirim token ke backend
+          }
+        });
+
+      if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.success) {
+            setDashboardData(result.data); // Simpan data ke State
+        } else {
+            setError(result.message);
+        }
+      } catch (err) {
+        setError("Gagal terhubung ke server.");
+        console.error(err);
+      } finally {
+        setLoading(false); // Matikan loading spinner
+      }
+    };
+      // Panggil fungsi fetch hanya jika user sudah terautentikasi
+    if (authStatus.isAuthenticated) {
+        fetchDashboardData();
+    }
+  }, [authStatus.isAuthenticated]); // Dependencies array
+  
   const [currentDate, setCurrentDate] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [authStatus, setAuthStatus] = useState({ isAuthenticated: false, user: null, currentView: 'login' });
